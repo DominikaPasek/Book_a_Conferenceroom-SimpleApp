@@ -1,0 +1,25 @@
+{% include 'ConferenceRooms.html' %}
+
+<br><br>
+<div class="container" align="center">
+
+        <p><strong>{{ room.name }}</strong></p>
+        <p>Capacity: {{ room.capacity }}</p>
+        <p>{% if room.projector == True %}
+                    Projector: yes
+                {% else %}
+                    Projector: no
+                {% endif %}
+        </p>
+
+    <button class="btn btn-outline-success"><a href="/room/book/{{ room.id }}" style="text-decoration:none;">Book</a></button>
+    <button class="btn btn-outline-success"><a href="/room/modify/{{ room.id }}" style="text-decoration:none;">Edit</a></button>
+    <button class="btn btn-outline-success"><a href="/room/delete/{{ room.id }}" style="text-decoration:none;">Delete</a></button>
+    <br><br>
+
+</div>
+</body>
+<footer id="footer">
+    Created & managed by D.G.Pasek
+</footer>
+</html>

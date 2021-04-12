@@ -1,0 +1,34 @@
+{% include 'ConferenceRooms.html' %}
+<br><br>
+  <div class="container">
+    {% if alert_message %}
+        <script>
+            alert('{{ alert_message }}');
+        </script>
+    {% endif %}
+
+    <form action="" method="post">
+        {% csrf_token %}
+
+        <label>
+            Room name: <br><br>
+            <input class="btn btn-outline-success" type="text" name="name" value={{ room.name }}>
+        </label> <br><br>
+        <label>
+            Capacity: <br><br>
+            <input class="btn btn-outline-success" type="number" name="capacity" value={{ room.capacity }}>
+        </label> <br><br>
+        <label>
+            Projector:   <br>
+            yes: <input class="btn btn-outline-success" type="radio" name="projectorY" value="True">
+            no: <input class="btn btn-outline-success" type="radio" name="projectorN" value="False">
+        </label> <br><br>
+        <button class="btn btn-outline-success" type="submit">Save</button>
+    </form>
+  </div>
+
+</body>
+<footer id="footer">
+    Created & managed by D.G.Pasek
+</footer>
+</html>
