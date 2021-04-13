@@ -2,7 +2,7 @@
 
   {% if messages %}
     {% for message in messages %}
-      <div class="alert alert-success alert-dismissible fade show">
+      <div class="alert alert-secondary alert-dismissible fade show">
           <strong> {{ message }} </strong>
       </div>
     {% endfor %}
@@ -16,15 +16,23 @@
         <p><a href="/room/{{ room.id }}" style="text-decoration:none;"><strong>{{ room.name }}</strong></a></p>
             <ul>
                 <li>Capacity: {{ room.capacity }}</li>
+
                 {% if room.projector == True %}
                     <li>Projector: yes</li>
                 {% else %}
                     <li>Projector: no</li>
                 {% endif %}
+
+                {% if room.reserved %}
+                <li>Today: booked</li>
+                {% else %}
+                <li>Today: available</li>
+                {% endif %}
+
             </ul>
-    <button class="btn btn-outline-success"><a href="/room/book/{{ room.id }}" style="text-decoration:none;">Book</a></button>
-    <button class="btn btn-outline-success"><a href="/room/modify/{{ room.id }}" style="text-decoration:none;">Edit</a></button>
-    <button class="btn btn-outline-success"><a href="/room/delete/{{ room.id }}" style="text-decoration:none;">Delete</a></button>
+    <button class="btn btn-outline-secondary"><a href="/room/reserve/{{ room.id }}" style="text-decoration:none;">Book</a></button>
+    <button class="btn btn-outline-secondary"><a href="/room/modify/{{ room.id }}" style="text-decoration:none;">Edit</a></button>
+    <button class="btn btn-outline-secondary"><a href="/room/delete/{{ room.id }}" style="text-decoration:none;">Delete</a></button>
     <br><br>
     {% endfor %}
 

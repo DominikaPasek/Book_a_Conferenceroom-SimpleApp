@@ -26,7 +26,7 @@
       }
     </style>
 
-    <title>Conference Rooms</title>
+    <title>Book a conference room today!</title>
 </head>
 <body style="background-color: cornsilk">
     {% if alert_message %}
@@ -61,8 +61,8 @@
             <form class="d-flex" id="search_space" method="post">
                 {% csrf_token %}
                 <input class="form-control me-2" type="search" placeholder="Find available room"
-                       aria-label="Search" name="search" title="Search by room name, max capasity or projector">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+                       aria-label="Search" name="search" title="Search by room name, min capasity or projector">
+                <input class="btn btn-outline-secondary" type="submit" name="search_button" value="Search">
             </form>
         </div>
       </div>

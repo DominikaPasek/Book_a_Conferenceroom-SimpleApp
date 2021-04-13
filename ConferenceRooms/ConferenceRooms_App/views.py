@@ -1,7 +1,9 @@
+from django.db.models import Min
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.views import View
-from ConferenceRooms_app.models import Room
+from ConferenceRooms_app.models import Room, Booking
+from datetime import date
 
 
 class Overview(View):
@@ -9,9 +11,27 @@ class Overview(View):
 
     def get(self, request):
         rooms = Room.objects.all().order_by('name')
+        for room in rooms:
+            booking_dates = [booking.date for booking in room.booking_set.all()]
+            room.reserved = date.today() in booking_dates
         if not rooms:
             messages.info(request, "No rooms to show")
         return render(request, template_name='all_rooms.html', context={'rooms': rooms})
+
+    def post(self, request):
+        button_clicked = request.POST.get('search_button')
+        if button_clicked:
+            search = request.POST.get('search')
+            if search == 'projector':
+                rooms_with_projector = Room.objects.filter(projector="True")
+                return render(request, template_name='search.html',
+                              context={'rooms_with_projector': rooms_with_projector})
+            else:
+                rooms = Room.objects.filter(name__startswith=search)
+                return render(request, template_name='search.html', context={'rooms': rooms})
+                # search = int(search)
+                # rooms = Room.objects.filter(capacity__gt=search)
+                # return render(request, template_name='search.html', context={'rooms': rooms})
 
 
 class RoomDetails(View):
@@ -19,7 +39,8 @@ class RoomDetails(View):
 
     def get(self, request, room_id):
         room = Room.objects.get(id=room_id)
-        return render(request, template_name='room_details.html', context={'room': room})
+        bookings = Booking.objects.all().filter(room_id=room)
+        return render(request, template_name='room_details.html', context={'room': room, 'bookings': bookings})
 
 
 class AddNewRoom(View):
@@ -34,8 +55,7 @@ class AddNewRoom(View):
         name = request.POST.get('name')
         capacity = request.POST.get('capacity')
         capacity = int(capacity) if capacity else 0
-        projector_yes = request.POST.get('projectorY')
-        projector_no = request.POST.get('projectorN')
+        projector = request.POST.get('projector')
         room = Room.objects.filter(name=name).first()
 
         if not name:
@@ -54,7 +74,7 @@ class AddNewRoom(View):
             return render(request, template_name='add_new_room.html',
                           context={'alert_message': alert_message})
 
-        if projector_yes:
+        if projector == "True":
             Room.objects.create(name=name, capacity=capacity, projector=True)
         else:
             Room.objects.create(name=name, capacity=capacity, projector=False)
@@ -108,7 +128,7 @@ class ModifyRoom(View):
         name = request.POST.get('name')
         capacity = request.POST.get('capacity')
         capacity = int(capacity) if capacity else 0
-        projector_yes = request.POST.get('projectorY')
+        projector = request.POST.get('projector')
         room = Room.objects.get(id=room_id)
 
         if not name:
@@ -121,7 +141,7 @@ class ModifyRoom(View):
             return render(request, template_name='modify_room.html',
                           context={'alert_message': alert_message})
 
-        if projector_yes:
+        if projector == "True":
             room.projector = True
         else:
             room.projector = False
@@ -131,3 +151,30 @@ class ModifyRoom(View):
         room.save()
         messages.success(request, 'The room has been modified.')
         return redirect('all_rooms')
+
+
+class RoomBooking(View):
+    def get(self, request, room_id):
+        room = Room.objects.get(id=room_id)
+        bookings = Booking.objects.all().filter(room_id=room)
+        return render(request, template_name='book_a_room.html', context={'room': room, 'bookings': bookings})
+
+    def post(self, request, room_id):
+        room = Room.objects.get(id=room_id)
+        date_wanted = request.POST.get('day')
+        comment = request.POST.get('comment')
+
+        available = Booking.objects.filter(room_id=room.id, date=str(date_wanted))
+
+        if available:
+            alert_message = "We are sorry, but this room is booked for that day. " \
+                            "Please, choose another day/another room or contact us at 123 456 789."
+            return render(request, template_name='book_a_room.html', context={'room': room, 'alert_message': alert_message})
+
+        if date_wanted < str(date.today()):
+            alert_message = "Wrong date!"
+            return render(request, template_name='book_a_room.html', context={'alert_message': alert_message})
+        else:
+            Booking.objects.create(date=date_wanted, room_id=room, comment=comment if comment else None)
+            messages.success(request, "Congratulations! The room has been booked.")
+            return redirect('all_rooms')

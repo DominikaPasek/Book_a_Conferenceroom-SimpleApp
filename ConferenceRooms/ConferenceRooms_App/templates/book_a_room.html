@@ -1,0 +1,42 @@
+{% include 'ConferenceRooms.html' %}
+<br><br>
+  <div class="container">
+    {% if alert_message %}
+        <script>
+            alert('{{ alert_message }}');
+        </script>
+    {% endif %}
+
+      <p>You are about to book a room:  <strong>{{ room.name }}</strong></p>
+    <p>The room can welcome up to   <strong>{{ room.capacity }} people</strong>.</p>
+      <p>{% if room.projector == True %}
+                    The room is equipped with a projector.
+        {% endif %}</p>
+      <br>
+    <p> {{ message }}</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        <label> Pick a day: <br>
+          <input class="btn btn-outline-secondary" type="date" name="day">
+
+        </label> <br>
+        <label>
+            Comments: <br>
+            <textarea class="btn btn-outline-secondary" rows="5" cols="39" name="comment"></textarea>
+        </label> <br><br>
+                    <input class="btn btn-outline-success" style="text-decoration:none;"
+               type="submit" name="book" value="Book this room for me, please!">
+      </form>
+      <br>
+          <h6>This room is booked on days:<br>
+            {% for booking in bookings %}
+                --{{ booking.date }}--
+            {% endfor %}
+          </h6>
+  </div>
+
+</body>
+<footer id="footer">
+    Created & managed by D.G.Pasek
+</footer>
+</html>

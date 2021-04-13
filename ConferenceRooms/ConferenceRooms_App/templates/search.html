@@ -1,0 +1,44 @@
+{% include 'ConferenceRooms.html' %}
+
+<br><br>
+<div class="container">
+    <h2>Search results:</h2> <br><br>
+
+  {% if rooms_with_projector %}
+    {% for room in rooms_with_projector %}
+        <p><a href="/room/{{ room.id }}" style="text-decoration:none;"><strong>{{ room.name }}</strong></a></p>
+            <ul>
+              <li>Capacity: {{ room.capacity }}</li><br>
+              <li>Projector: yes</li>
+            </ul><br>
+      <button class="btn btn-outline-secondary"><a href="/room/reserve/{{ room.id }}" style="text-decoration:none;">Book</a></button>
+      <button class="btn btn-outline-secondary"><a href="/room/modify/{{ room.id }}" style="text-decoration:none;">Edit</a></button>
+      <button class="btn btn-outline-secondary"><a href="/room/delete/{{ room.id }}" style="text-decoration:none;">Delete</a></button>
+      <br><br>
+    {% endfor %}
+  {% endif %}
+
+
+  {% if rooms %}
+    {% for room in rooms %}
+      <p><a href="/room/{{ room.id }}" style="text-decoration:none;"><strong>{{ room.name }}</strong></a></p>
+          <ul>
+            <li>Capacity: {{ room.capacity }}</li><br>
+            {% if room.projector == 'True' %}
+              <li>Projector: yes</li>
+            {% else %}
+              <li>Projector: no</li>
+            {% endif %}
+          </ul><br>
+      <button class="btn btn-outline-secondary"><a href="/room/reserve/{{ room.id }}" style="text-decoration:none;">Book</a></button>
+      <button class="btn btn-outline-secondary"><a href="/room/modify/{{ room.id }}" style="text-decoration:none;">Edit</a></button>
+      <button class="btn btn-outline-secondary"><a href="/room/delete/{{ room.id }}" style="text-decoration:none;">Delete</a></button>
+      <br><br>
+    {% endfor %}
+  {% endif %}
+</div>
+</body>
+<footer id="footer">
+    Created & managed by D.G.Pasek
+</footer>
+</html>

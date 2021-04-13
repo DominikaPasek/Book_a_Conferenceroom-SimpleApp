@@ -3,18 +3,26 @@
 <br><br>
 <div class="container" align="center">
 
-        <p><strong>{{ room.name }}</strong></p>
-        <p>Capacity: {{ room.capacity }}</p>
-        <p>{% if room.projector == True %}
-                    Projector: yes
-                {% else %}
-                    Projector: no
-                {% endif %}
-        </p>
+    <h3><strong>{{ room.name }}</strong></h3><br>
+    <p>Capacity: {{ room.capacity }}</p>
+    <p>{% if room.projector == True %}
+                Projector: yes
+            {% else %}
+                Projector: no
+            {% endif %}
+    </p><br><br>
+    <p>This room is booked on days:</p>
 
-    <button class="btn btn-outline-success"><a href="/room/book/{{ room.id }}" style="text-decoration:none;">Book</a></button>
-    <button class="btn btn-outline-success"><a href="/room/modify/{{ room.id }}" style="text-decoration:none;">Edit</a></button>
-    <button class="btn btn-outline-success"><a href="/room/delete/{{ room.id }}" style="text-decoration:none;">Delete</a></button>
+        {% for booking in bookings %}
+    <p><u>{{ booking.date }}</u><br>
+        Comments: {{ booking.comment}}</p>
+        {% endfor %}
+
+    <br>
+
+    <button class="btn btn-outline-secondary"><a href="/room/reserve/{{ room.id }}" style="text-decoration:none;">Book</a></button>
+    <button class="btn btn-outline-secondary"><a href="/room/modify/{{ room.id }}" style="text-decoration:none;">Edit</a></button>
+    <button class="btn btn-outline-secondary"><a href="/room/delete/{{ room.id }}" style="text-decoration:none;">Delete</a></button>
     <br><br>
 
 </div>
