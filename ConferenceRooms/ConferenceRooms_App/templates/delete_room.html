@@ -11,7 +11,7 @@
         {% csrf_token %}
         <label>
             Room name: <br><br>
-            <input class="btn btn-outline-success" type="text" name="name" disabled value={{ room.name }}>
+            <input class="btn btn-outline-secondary" type="text" name="name" disabled value={{ room.name }}>
         </label> <br><br>
         <label>Are you sure you want to delete this room?</label> <br><br>
         <button class="btn btn-outline-success" type="submit">Delete</button>
